@@ -8,7 +8,7 @@ from django.http import JsonResponse
 
 # View to list all active rooms
 class RoomView(generics.ListAPIView):
-    query = Room.object.all()
+    query = Room.objects.all()
     serializer_class = RoomSerializer
 
 #
