@@ -1,6 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from rest_framework import generics, status
+from .serializers import *
+from .models import *
+from rest_framework.views import APIView
+from rest_framework.response import Response 
+from django.http import JsonResponse
 
-# Create your views here.
-def main(request):
-    return HttpResponse("Hello")
+# View to list all active rooms
+class RoomView(generics.ListAPIView):
+    query = Room.object.all()
+    serializer_class = RoomSerializer
+
+#
