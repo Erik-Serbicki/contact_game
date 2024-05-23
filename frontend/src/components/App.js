@@ -2,12 +2,12 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import HomePage from "./HomePage";
 
-export default function App()
-{
+export default function App(){
+
     return (
         <div className="center">
             <HomePage />
-        </div>   
+        </div> 
     );
 }
 
