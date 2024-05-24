@@ -1,6 +1,8 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
-import { Button, Grid, Typography, Card, TextField, ThemeProvider, CssBaseline, createTheme, useTheme} from "@mui/material";
+import { Button, Grid, Typography, Card, TextField, ThemeProvider, CssBaseline, createTheme, useTheme, IconButton} from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 export default function HomePage(){
     const [state, setState] = React.useState({
@@ -70,9 +72,10 @@ export default function HomePage(){
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                <Button variant="contained" color='secondary' onClick={changeMode}>
-                    {theme.palette.mode} mode
-                </Button>
+                    <p>{theme.palette.mode} mode</p>
+                    <IconButton sx={{ ml: 1 }} onClick={changeMode} color="inherit">
+                        {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
+                    </IconButton>
                 </Grid>
             </Grid> 
         );
