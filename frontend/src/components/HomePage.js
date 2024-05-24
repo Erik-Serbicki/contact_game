@@ -1,12 +1,12 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
-import { Button, Grid, Typography, Card, TextField, ThemeProvider, CssBaseline, createTheme, useTheme, IconButton} from "@mui/material";
+import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box} from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
 export default function HomePage(){
     const [state, setState] = React.useState({
-        mode: 'light',
+        mode: 'dark',
     });
 
     const getDesignTokens = (mode) => ({
@@ -21,6 +21,7 @@ export default function HomePage(){
                 }, 
                 background: {
                     default: "#E3D7FF",
+                    paper: "#846C5B",
                 },
             } : {
                 primary: {
@@ -31,6 +32,7 @@ export default function HomePage(){
                 }, 
                 background: {
                     default: "#071E22",
+                    paper: "#846C5B",
                 },
                 text: {
                     primary: "#E3D7FF"
@@ -55,6 +57,24 @@ export default function HomePage(){
     ]);
 
     function renderHomeScreen(){
+
+        const themeButtonBox = (
+            <Box sx={{
+                display:'flex', 
+                alignItems:'center', 
+                justifyContent: 'center', 
+                bgcolor: 'background.paper', 
+                maxWidth: 120,
+                minHeight: 50,
+                borderRadius: '8px',
+                }}>
+                <Typography variant="body2">{theme.palette.mode.toUpperCase()} MODE</Typography>
+                <IconButton sx={{ ml: 1}} onClick={changeMode} color="inherit">
+                    {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
+                </IconButton>
+            </Box>
+        );
+
         return (
             <Grid container align="center" spacing={3}>
                 <Grid item xs={12}>
@@ -72,10 +92,7 @@ export default function HomePage(){
                     </Button>
                 </Grid>
                 <Grid item xs={12}>
-                    <p>{theme.palette.mode} mode</p>
-                    <IconButton sx={{ ml: 1 }} onClick={changeMode} color="inherit">
-                        {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
-                    </IconButton>
+                    {themeButtonBox}
                 </Grid>
             </Grid> 
         );
