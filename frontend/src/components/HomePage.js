@@ -94,7 +94,7 @@ export default function HomePage(){
                     <TextField label="Name" variant="outlined"/>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="primary">
+                    <Button variant="contained" color="primary" to='/lobby' component={Link}>
                         Play
                     </Button>
                 </Grid>
