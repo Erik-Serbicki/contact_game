@@ -1,12 +1,15 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
-import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box} from "@mui/material";
+import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box, useMediaQuery} from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import Lobby from "./Lobby";
 
 export default function HomePage(){
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
     const [state, setState] = React.useState({
-        mode: 'dark',
+        mode: prefersDarkMode ? 'dark':'light',
     });
 
     const getDesignTokens = (mode) => ({
@@ -53,6 +56,10 @@ export default function HomePage(){
         {
             path: "/",
             element: renderHomeScreen(),
+        },
+        {
+            path: '/lobby',
+            element: <Lobby />
         },
     ]);
 
