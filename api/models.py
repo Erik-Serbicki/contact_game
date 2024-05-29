@@ -34,4 +34,4 @@ class Room(models.Model):
 class User(models.Model):
     user = models.CharField(max_length=50, unique=True)
     user_name = models.CharField(max_length=50, default=generate_random_name)
-    room = models.ForiegnKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)

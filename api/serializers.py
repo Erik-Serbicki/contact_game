@@ -7,12 +7,12 @@ class RoomSerializer(serializers.ModelSerializer):
         model = Room
         
         # Define the fields within the model
-        fields = ('id', 'code', 'host', 'name', 'created_at')
+        fields = ('id', 'code', 'host', 'created_at')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('room_code', 'user_name')
+        fields = ('user', 'user_name', 'room')
 
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:

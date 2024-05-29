@@ -59,7 +59,18 @@ export default function HomePage(){
         },
         {
             path: '/lobby',
-            element: <Lobby />
+            element: <Lobby />,
+            loader: async () => {
+                const response = await fetch('/api/create-room', {
+                    method: "post",
+                });
+                if (response.status === 404){
+                    throw new Response('Not Found', {status: 404});
+                }
+                else{
+                    return response;
+                }
+            }
         },
     ]);
 
