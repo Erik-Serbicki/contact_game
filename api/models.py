@@ -32,5 +32,6 @@ class Room(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
 class User(models.Model):
-    room_code = models.CharField(max_length=CODE_LENGTH, default="", unique=True)
+    user = models.CharField(max_length=50, unique=True)
     user_name = models.CharField(max_length=50, default=generate_random_name)
+    room = models.ForiegnKey(Room, on_delete=models.CASCADE)
