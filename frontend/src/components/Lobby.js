@@ -5,8 +5,9 @@ import { useLoaderData } from 'react-router-dom';
 export default function Lobby(){
 
     const data = useLoaderData();
+    console.log(data);
 
     return(
-        <Typography>Main Lobby: {data.code} </Typography>
+        <Typography>Main Lobby: {10} </Typography>
     );
 }

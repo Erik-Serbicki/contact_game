@@ -1,6 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
-import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box, useMediaQuery} from "@mui/material";
+import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box, useMediaQuery, FormControl} from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Lobby from "./Lobby";
@@ -10,6 +10,7 @@ export default function HomePage(){
 
     const [state, setState] = React.useState({
         mode: prefersDarkMode ? 'dark':'light',
+        userName: '', 
     });
 
     const getDesignTokens = (mode) => ({
@@ -52,6 +53,12 @@ export default function HomePage(){
         }));
     }
 
+    function handleUserNameChange(e){
+        setState(prevState => ({
+            ...prevState, userName: e.target.value,
+        }));
+    }
+
     const router = createBrowserRouter([
         {
             path: "/",
@@ -61,15 +68,18 @@ export default function HomePage(){
             path: '/lobby',
             element: <Lobby />,
             loader: async () => {
-                const response = await fetch('/api/create-room', {
-                    method: "post",
-                });
-                if (response.status === 404){
-                    throw new Response('Not Found', {status: 404});
-                }
-                else{
-                    return response;
-                }
+                const [user, room] = await Promise.all([
+                    fetch('/api/create-room', {method:"post", headers:{'Content-Type':'application/json'}}).then(res => res.json()),
+                    fetch('/api/create-user', {
+                        method:'post',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({
+                            user_name: state.userName,
+                        })
+                    })
+                ]);
+
+                return {user, room};  //ADD ERROR RESPONSE
             }
         },
     ]);
@@ -101,8 +111,10 @@ export default function HomePage(){
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <Typography variant="h4" component="h4">Choose a cool nickname</Typography>
-                    <TextField label="Name" variant="outlined"/>
+                    <FormControl>
+                        <Typography variant="h4" component="h4">Choose a cool nickname</Typography>
+                        <TextField label="Name" variant="outlined" onChange={handleUserNameChange}/>
+                    </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                     <Button variant="contained" color="primary" to='/lobby' component={Link}>
