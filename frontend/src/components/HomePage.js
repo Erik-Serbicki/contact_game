@@ -68,15 +68,15 @@ export default function HomePage(){
             path: '/lobby',
             element: <Lobby />,
             loader: async () => {
-                const [user, room] = await Promise.all([
+                const [room, user] = await Promise.all([
                     fetch('/api/create-room', {method:"post", headers:{'Content-Type':'application/json'}}).then(res => res.json()),
                     fetch('/api/create-user', {
                         method:'post',
                         headers: {'Content-Type':'application/json'},
                         body: JSON.stringify({
                             user_name: state.userName,
-                        })
-                    })
+                        }),
+                    }).then(res => res.json())
                 ]);
 
                 return {user, room};  //ADD ERROR RESPONSE
@@ -86,22 +86,22 @@ export default function HomePage(){
 
     function renderHomeScreen(){
 
-        const themeButtonBox = (
-            <Box sx={{
-                display:'flex', 
-                alignItems:'center', 
-                justifyContent: 'center', 
-                bgcolor: 'background.paper', 
-                maxWidth: 120,
-                minHeight: 50,
-                borderRadius: '8px',
-                }}>
-                <Typography variant="body2">{theme.palette.mode.toUpperCase()} MODE</Typography>
-                <IconButton sx={{ ml: 1}} onClick={changeMode} color="inherit">
-                    {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
-                </IconButton>
-            </Box>
-        );
+        // const themeButtonBox = (
+        //     <Box sx={{
+        //         display:'flex', 
+        //         alignItems:'center', 
+        //         justifyContent: 'center', 
+        //         bgcolor: 'background.paper', 
+        //         maxWidth: 120,
+        //         minHeight: 50,
+        //         borderRadius: '8px',
+        //         }}>
+        //         <Typography variant="body2">{theme.palette.mode.toUpperCase()} MODE</Typography>
+        //         <IconButton sx={{ ml: 1}} onClick={changeMode} color="inherit">
+        //             {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
+        //         </IconButton>
+        //     </Box>
+        // );
 
         return (
             <Grid container align="center" spacing={3}>
@@ -121,17 +121,35 @@ export default function HomePage(){
                         Play
                     </Button>
                 </Grid>
-                <Grid item xs={12}>
+                {/* <Grid item xs={12}>
                     {themeButtonBox}
-                </Grid>
+                </Grid> */}
             </Grid> 
         );
     }
+
+    const themeButtonBox = (
+        <Box sx={{
+            display:'flex', 
+            alignItems:'center', 
+            justifyContent: 'center', 
+            bgcolor: 'background.paper', 
+            maxWidth: 120,
+            minHeight: 50,
+            borderRadius: '8px',
+            }}>
+            <Typography variant="body2">{theme.palette.mode.toUpperCase()} MODE</Typography>
+            <IconButton sx={{ ml: 1}} onClick={changeMode} color="inherit">
+                {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
+            </IconButton>
+        </Box>
+    );
 
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <RouterProvider router={router} />  
+            {themeButtonBox}
         </ThemeProvider>
     );
 }

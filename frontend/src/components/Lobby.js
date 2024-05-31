@@ -8,6 +8,11 @@ export default function Lobby(){
     console.log(data);
 
     return(
-        <Typography>Main Lobby: {10} </Typography>
+        <Grid container spacing={2} align="center">
+            <Grid item xs={12}>
+                <Typography>Main Lobby: {data.room.code} </Typography>
+                <Typography>Nickname: {data.user.user_name} </Typography>
+            </Grid>
+        </Grid> 
     );
 }

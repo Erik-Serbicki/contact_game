@@ -8,12 +8,12 @@ from django.http import JsonResponse
 
 # View to list all active rooms
 class RoomView(generics.ListAPIView):
-    query = Room.objects.all()
+    queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
 # View to list all active user
 class UserView(generics.ListAPIView):
-    query = User.objects.all()
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     
 # View to create a room
@@ -52,17 +52,21 @@ class CreateUserView(APIView):
         room_query = Room.objects.filter(code=room_code)
         
         serializer = self.serializer_class(data=request.data)
+        print(serializer.initial_data)
         
         if serializer.is_valid():
-            
             user_name = serializer.data.get('user_name')
     
             user_query = User.objects.filter(user=host)
             if user_query.exists():
                 user = user_query[0]
-                user.user_name = user_name
-                user.user = host
-                user.save(update_fields=['user_name', 'user'])
+                if user_name != None:
+                    user.user_name = user_name
+                    user.user = host
+                    user.save(update_fields=['user_name', 'user'])
+                else:
+                    user.user = host
+                    user.save(update_fields=['user']) 
                 self.request.session['user_name'] = user.user_name
                 return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
             else:

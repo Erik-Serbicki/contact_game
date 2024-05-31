@@ -15,6 +15,9 @@ def generate_unique_code():
         if Room.objects.filter(code=code).count() == 0:
             return code
 
+def generate_random_name():
+    return ''
+
 # Room model
 class Room(models.Model):
     code = models.CharField(max_length=CODE_LENGTH, default=generate_unique_code, unique=True)
@@ -23,5 +26,5 @@ class Room(models.Model):
     
 class User(models.Model):
     user = models.CharField(max_length=50, unique=True)
-    user_name = models.CharField(max_length=50)
+    user_name = models.CharField(max_length=50, default=generate_random_name, null=True)
     room = models.ForeignKey(Room, on_delete=models.CASCADE, null=True)

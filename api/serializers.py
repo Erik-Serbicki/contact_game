@@ -15,6 +15,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('user', 'user_name', 'room')
 
 class CreateUserSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        if data.get('user_name', None) == '':
+            data.pop('user_name')
+        return super(CreateUserSerializer, self).to_internal_value(data)
     class Meta:
         model = User
-        fields = ('user_name')
+        fields = ('user_name',)
