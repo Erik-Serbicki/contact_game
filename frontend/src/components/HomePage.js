@@ -86,23 +86,6 @@ export default function HomePage(){
 
     function renderHomeScreen(){
 
-        // const themeButtonBox = (
-        //     <Box sx={{
-        //         display:'flex', 
-        //         alignItems:'center', 
-        //         justifyContent: 'center', 
-        //         bgcolor: 'background.paper', 
-        //         maxWidth: 120,
-        //         minHeight: 50,
-        //         borderRadius: '8px',
-        //         }}>
-        //         <Typography variant="body2">{theme.palette.mode.toUpperCase()} MODE</Typography>
-        //         <IconButton sx={{ ml: 1}} onClick={changeMode} color="inherit">
-        //             {theme.palette.mode === 'dark' ? <Brightness7Icon/>:<Brightness4Icon/>}
-        //         </IconButton>
-        //     </Box>
-        // );
-
         return (
             <Grid container align="center" spacing={3}>
                 <Grid item xs={12}>
@@ -121,9 +104,6 @@ export default function HomePage(){
                         Play
                     </Button>
                 </Grid>
-                {/* <Grid item xs={12}>
-                    {themeButtonBox}
-                </Grid> */}
             </Grid> 
         );
     }
@@ -148,8 +128,14 @@ export default function HomePage(){
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <RouterProvider router={router} />  
-            {themeButtonBox}
+            <Grid container align="center" spacing={2}>
+                <Grid item xs={12}>
+                    <RouterProvider router={router} /> 
+                </Grid>
+                <Grid item xs={12}>
+                    {themeButtonBox}
+                </Grid>
+            </Grid>
         </ThemeProvider>
     );
 }
