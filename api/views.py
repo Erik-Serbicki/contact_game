@@ -47,32 +47,40 @@ class CreateUserView(APIView):
             self.request.session.create()
         
         host = self.request.session.session_key
-        room_code = self.request.session['room_code']  
-        
-        room_query = Room.objects.filter(code=room_code)
         
         serializer = self.serializer_class(data=request.data)
-        print(serializer.initial_data)
+        print(f"Initial Data: {serializer.initial_data}")
         
         if serializer.is_valid():
             user_name = serializer.data.get('user_name')
+            room_code = serializer.data.get('room_code') 
     
             user_query = User.objects.filter(user=host)
             if user_query.exists():
                 user = user_query[0]
-                if user_name != None:
-                    user.user_name = user_name
-                    user.user = host
-                    user.save(update_fields=['user_name', 'user'])
-                else:
-                    user.user = host
-                    user.save(update_fields=['user']) 
-                self.request.session['user_name'] = user.user_name
+                user.user_name = user_name
+                user.user = host
+                user.room_code = room_code
+                user.save(update_fields=['user', 'user_name', 'room_code'])
                 return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
             else:
-                user = User(user=host, user_name=user_name)
+                user = User(user=host, user_name=user_name, room_code=room_code)
                 user.save()
                 return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+        print(serializer.errors)
         return Response({'Bad Input': 'Invalid Data'}, status=status.HTTP_400_BAD_REQUEST)
-                
-        
+
+class GetUsersInRoom(APIView):
+    serializer_class = UserSerializer
+    lookup_url_kwarg = 'code'
+    
+    def get(self, request, format=None):
+        code = request.GET.get(self.lookup_url_kwarg)
+        if code != None:
+            user = User.objects.filter(room_code=code)
+            if user.exists():
+                data = UserSerializer(user[0]).data
+                data['is_host'] = self.request.session.session_key == user[0].user
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({'Room Not Found': "Invalid Room Code"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"Bad Request":"No Room Input"}, status=status.HTTP_400_BAD_REQUEST)

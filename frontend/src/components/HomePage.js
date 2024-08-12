@@ -1,5 +1,5 @@
 import React from "react";
-import { createBrowserRouter, RouterProvider, Link, redirect} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Link, redirect, useNavigate} from "react-router-dom";
 import { Button, Grid, Typography, TextField, ThemeProvider, CssBaseline, createTheme, IconButton, Card, CardContent, Box, useMediaQuery, FormControl} from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -12,6 +12,8 @@ export default function HomePage(){
         mode: prefersDarkMode ? 'dark':'light',
         userName: '', 
     });
+
+    const navigate = useNavigate();
 
     const getDesignTokens = (mode) => ({
         palette: {
@@ -67,25 +69,23 @@ export default function HomePage(){
         {
             path: '/lobby',
             element: <Lobby />,
-            loader: async () => {
-                const [room, user] = await Promise.all([
-                    fetch('/api/create-room', {method:"post", headers:{'Content-Type':'application/json'}}).then(res => res.json()),
-                    fetch('/api/create-user', {
-                        method:'post',
-                        headers: {'Content-Type':'application/json'},
-                        body: JSON.stringify({
-                            user_name: state.userName,
-                        }),
-                    }).then(res => res.json())
-                ]);
-
-                return {user, room};  //ADD ERROR RESPONSE
-            }
         },
     ]);
 
-    function renderHomeScreen(){
+    function handlePlayButtonClicked(){
+        fetch('api/create-room', {method:"post", headers:{"Content-Type":"application/json"}}).then((res) => res.json()).then((data) => {
+            fetch('api/create-user', {
+                method: "post",
+                headers: {"Content-Type":'application/json'},
+                body: JSON.stringify({
+                    user_name: state.userName,
+                    room_code: data.code,
+                })
+            }).then(navigate('/lobby', {state:{'user_name':state.userName, 'room_code':data.code}}));
+        });
+    }
 
+    function renderHomeScreen(){
         return (
             <Grid container align="center" spacing={3}>
                 <Grid item xs={12}>
@@ -100,7 +100,10 @@ export default function HomePage(){
                     </FormControl>
                 </Grid>
                 <Grid item xs={12}>
-                    <Button variant="contained" color="primary" to='/lobby' component={Link}>
+                    <Button variant="contained" 
+                        color="primary" 
+                        onClick={handlePlayButtonClicked}
+                    >
                         Play
                     </Button>
                 </Grid>
